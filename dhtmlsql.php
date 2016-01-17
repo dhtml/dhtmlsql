@@ -623,7 +623,7 @@ class DHTMLSQL {
 	/*
 	a stylish way of running a select query
 	del('users','id>?',array(16));
-	will give del FROM `users` WHERE id>'16' 
+	will give delete FROM `users` WHERE id>'16' 
 	*/
 	
 	/**
