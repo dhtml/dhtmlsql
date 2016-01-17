@@ -48,7 +48,7 @@ Connect to a database
 
 ```php
 <?php
-require "dhtmlsql.php";
+require "library/dhtmlsql.php";
  
 // Connection data (server_address, name, password,  database)
 $db=DHTMLSQL::connect('localhost','admin','pass','dbtest');
