@@ -1,7 +1,7 @@
 <?php 
 $mysqli = @new mysqli('localhost','admin','pass','dbtest');
 
-require "../../dhtmlsql.php";
+require "../../library/dhtmlsql.php";
 
 
 $db=DHTMLSQL::get()->connect($mysqli);

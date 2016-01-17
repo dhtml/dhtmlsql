@@ -19,7 +19,7 @@
         "php": ">=5.1.0"
     },
     "autoload": {
-        "files": ["dhtmlsql.php"]
+        "files": ["library/dhtmlsql.php"]
     },
     "extra": {
         "branch-alias": {

@@ -2,7 +2,7 @@
 /*
 This is a basic database connection script using DHTMLSQL
 */
-require "dhtmlsql.php";
+require "library/dhtmlsql.php";
 
 // Connection data (server_address, database, name, poassword)
 $db=DHTMLSQL::get()->connect('localhost','admin','pass','dbtest');

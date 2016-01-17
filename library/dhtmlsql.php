@@ -21,49 +21,155 @@
 
 class DHTMLSQL {
 
-	/*Holds the Database Connection*/
+    /**
+     *  MySQL link identifier.
+     *
+     *  @access private
+     *
+     *  @var  object
+     *
+     */
 	private $connection=null;
 
-	/*Holds the present result set*/
+    /**
+     *  MySQL result set.
+     *
+     *  @access private
+     *
+     *  @var  object
+     *
+     */
 	private $result;
 	
-	/*Holds a static instance of the library*/
+    /**
+     *  Static library class
+     *
+     *  @access private
+     *
+     *  @var  resource
+     *
+     */
 	private static $Instance;
 	
-	/*Holds the current version of the library*/
+    /**
+     *  Current library version
+     *
+     *  @access private
+     *
+     *  @var  string
+     *
+     */
 	private $version="1.0.0";
 	
-	/*Logs the num_rows last returned*/
+    /**
+     *  Number of rows returned by query
+     *
+     *  Default is 0.
+     *
+     *  @var  integer
+     *
+     */
 	public $returned_rows;
 	
-	/*Logs the connection error if there is one*/
-	private $connect_error=null;
+    /**
+     *  Logs the connection error if there is one
+     *
+     *
+     *  Default is an empty string.
+     *
+     *  @var  string
+     *
+     */
+	private $connect_error="";
 
-	/*returns the last full sql statement executed*/
+    /**
+     *  Last sql statement issues internally
+     *
+     *  Default is an empty string.
+     *
+     *  @access private
+     *
+     *  @var  string
+     *
+     */
 	private $last_sql="";
 
-	/*returns the last mysql statement result*/
-	public $last_result="";
+    /**
+     *  Last database result resource
+     *
+     *  Default is null.
+     *
+     *  @var  resource
+     *
+     */
+	public $last_result=null;
 	
-	/*allows the application to halt whenever there is a database error*/
+    /**
+     *  Determines if application should halt whenever there is a database error
+     *
+     *  Default is TRUE.
+     *
+     *  @var  boolean
+     *
+     */
 	public $halt_on_error=true;
 	
-	/*allows the application to print error on screen*/
+    /**
+     *  Prints error log to screen whenever an error occurs while executing a statement
+     *
+     *  Default is TRUE.
+     *
+     *  @var  boolean
+     *
+     */
 	public $print_error=true;
 	
 	
-	/*Database query logger configuration*/
-	public $enable_file_logging=false; 
-	public $log_output_file='';
+    /**
+     *  Configures library database query logging
+     *  When set to true, each query executed is logged to dbase.log
+     *
+     *  Default is FALSE.
+     *
+     *  @var  boolean
+     *
+     */
+	public $session_logging=false; 
+
+
+    /**
+     *  Configures the path where database queries will be logged if session_logging is set to true
+     *  It can be a path that is writeable
+     *  If this is not specified and session_logging=true then dbase.log will be used for logging by default
+     *
+     *  Default is an empty string.
+     *
+     *  @var  string
+     *
+     */
+	public $session_logger='';
 	
-	/*If this is turned on, sql queries will print sql statements and not execute them*/
+
+    /**
+     *  Configures the special preview mode
+     *  When set to true, each query meant to be executed will be printed and on screen and not executed 
+     *  This is useful in development mode for testing the library
+     *
+     *  Default is FALSE.
+     *
+     *  @var  boolean
+     *
+     *  @access private
+     *
+     */
 	private $preview_mode=false;
 
 
     /**
-	Static constructor of class
-	You can instantiate the class object in a dynamic manner via $db=new DHTMLSQL();
-	You can instantiate the class object in a static manner via $db=DHTMLSQL::load();
+    *  Static constructor of class
+    *  You can instantiate the class object in a dynamic manner via $db=new DHTMLSQL();
+    *  You can instantiate the class object in a static manner via $db=DHTMLSQL::load();
+     *
 	*/
 	public static function load() {
 		if ( self::$Instance === null )
@@ -74,7 +180,8 @@ class DHTMLSQL {
 	}
 
     /**
-	Class constructor
+	* Class constructor
+     *
 	*/
 	public function __construct() {
 		self::$Instance=$this;
@@ -83,51 +190,46 @@ class DHTMLSQL {
 	
 	
     /**
-     *  Logs SQL queries to file
+     *  Enables internal logging of SQL queries to file
      *
      *  <code>
-     *	$db->log_output_file="sql.log";
-     *	$db->enable_file_logging=true;
+     *	$db->session_logger="sql.log";
+     *	$db->session_logging=true;
      *	$db->query("select 1");
      *  </code>
 	 *
      *  @param  string  $log	(Optional) The string to be logged
 	 *
+     *  @access private
 	 *
      *  @return void
+     *
 	*/
-	public function session_log($log='') {
-		if($this->enable_file_logging!=true) {return;}
-		if(empty($this->log_output_file)) {$this->log_output_file=__DIR__.'/dbase.log';}
+	private function session_log($log='') {
+		if($this->session_logging!=true) {return;}
+		if(empty($this->session_logger)) {$this->session_logger=__DIR__.'/dbase.log';}
 
 		$time=date("d/m/Y h:i:a");
 		$report="[$time]"."\n$log\n\n";
 
-		error_log($report, 3, $this->log_output_file);
+		error_log($report, 3, $this->session_logger);
 	}
 	
-	/*
-	
-	
-	
-	
-	returns true if successful or false when there is no output log file specified
-	*/
-
     /**
      *  Empties the session_log output file
      *
      *  <code>
-     *	$db->log_output_file="sql.log";
-     *	$db->reset_log_output_file();
+     *	$db->session_logger="sql.log";
+     *	$db->reset_session_logger();
      *  </code>
 	 *
 	 *
      *  @return boolean		true if successful (or file does not exist), false if no output file was specified
+     *
 	*/
-	public function reset_log_output_file() {
-		if(empty($this->log_output_file)) {return false;}
-		@file_put_contents($this->log_output_file,'');
+	public function reset_session_logger() {
+		if(empty($this->session_logger)) {return false;}
+		@file_put_contents($this->session_logger,'');
 		return true;
 	}
 
@@ -145,6 +247,7 @@ class DHTMLSQL {
      *  @param  string  $prefix		prefix to be added to table names
 	 *
      *  @return string		sql statement with table names (in curly braces) prefixed
+     *
 	*/
 	public function db_prefix_tables($sql,$prefix) {
 		return strtr($sql, array('{' => $prefix, '}' => ''));
@@ -164,6 +267,7 @@ class DHTMLSQL {
      *  </code>
 	 *
      *  @return object		DHTMLSQL class object is returned
+     *
 	*/
 	public static function get() {return self::load();}
 
@@ -206,6 +310,7 @@ class DHTMLSQL {
      *
      *
      *  @return object				DHTMLSQL object is returned
+     *
      */
 	public function connect($host = null,$username = null,$password = null,$dbname = null,$port=null,$socket=null) {
 		$this->host=$host;
@@ -236,6 +341,7 @@ class DHTMLSQL {
 	 *
 	 *
      *  @return string		sql connection error in case of unsuccessful connection otherwise empty string
+     *
 	*/
 	public function connect_error() {return $this->connect_error;}
 
@@ -251,6 +357,7 @@ class DHTMLSQL {
 	 *
 	 *
      *  @return boolean		returns true if a successful connection has been made otherwise returns false
+     *
 	*/
 	public function connected() {return !is_null($this->connection);}
 
@@ -264,6 +371,7 @@ class DHTMLSQL {
 	 *
 	 *
      *  @return int		the number of rows returned otherwise 0
+     *
 	*/
 	public function num_rows() {return (isset($this->returned_rows) ? $this->returned_rows : 0);}
 	
@@ -280,6 +388,7 @@ class DHTMLSQL {
 	 *
 	 *
      *  @return void
+     *
 	*/
 	public function preview($mode) {
 		$this->preview_mode=$mode;
@@ -431,7 +540,8 @@ class DHTMLSQL {
 	 *
 	 *
      *  @return string		the last sql statement executed
-	*/
+     *
+ 	 */
 	public function fetch_sql() {
 		return $this->last_sql;
 	}
@@ -440,6 +550,7 @@ class DHTMLSQL {
      *  Get number of affected rows in previous MySQL operation
 	 *
      *  @return int		number of affected rows otherwise -1 if last result fails
+     *
 	*/
 	public function affected_rows() {return isset($this->connection->affected_rows) ? $this->connection->affected_rows:-1;}
 
@@ -447,6 +558,7 @@ class DHTMLSQL {
      *  Get the ID generated from the previous INSERT operation
 	 *
      *  @return int		returns generated ID otherwise 0 (if no ID was generated or autoincrement was not set)
+     *
 	*/
 	public function insert_id() {return isset($this->connection->insert_id) ? $this->connection->insert_id:0;}
 
@@ -585,6 +697,7 @@ class DHTMLSQL {
      *  @return mixed                   Found value/values or FALSE if no records matching the given criteria (if any)
      *                                  were found. It also returns FALSE if there are no records in the table or if there
      *                                  was an error.
+     *
      */
 	function dlookup($column, $table, $where = '', $replacements = '')
 	{
@@ -620,11 +733,6 @@ class DHTMLSQL {
 		return false;
 	}
 	
-	/*
-	a stylish way of running a select query
-	del('users','id>?',array(16));
-	will give delete FROM `users` WHERE id>'16' 
-	*/
 	
 	/**
 	*  Shorthand for deleting some or all items in a table.
@@ -704,6 +812,7 @@ class DHTMLSQL {
      *                                  Default is FALSE.
      *
      *  @return boolean                 Returns TRUE on success of FALSE on error.
+     *
      */
 	function insert($table, $columns, $ignore = false)
 	{
@@ -757,6 +866,7 @@ class DHTMLSQL {
      *
      *
      *  @return boolean                 Returns TRUE on success of FALSE on error.
+     *
      */
 	function replace($table, $columns)
 	{
@@ -788,6 +898,9 @@ class DHTMLSQL {
      *  names) and automatically {@link escape()} value.
      *
      *  @access private
+     *
+     *  @return string
+     *
      */
 	private function _build_columns($columns)
 	{
@@ -825,6 +938,7 @@ class DHTMLSQL {
      *  This method may also alter the original variable given as argument, as it is passed by reference!
      *
      *  @access private
+     *
      */
 	private function _build_sql(&$columns)
 	{
@@ -918,6 +1032,7 @@ class DHTMLSQL {
      *                                  Default is an empty array.
      *
      *  @return boolean                 Returns TRUE on success of FALSE on error.
+     *
      */
 	function insert_update($table, $columns, $update = array())
 	{
@@ -1000,6 +1115,7 @@ class DHTMLSQL {
 	*                                  Default is FALSE.
 	*
 	*  @return boolean                 Returns TRUE on success of FALSE on error.
+     *
 	*/
 	function insert_bulk($table, $columns, $data, $ignore = false)
 	{
@@ -1056,6 +1172,7 @@ class DHTMLSQL {
 	*
 	*
 	*  @return void
+     *
 	*/
 	function optimize()
 	{
@@ -1106,6 +1223,7 @@ class DHTMLSQL {
      *
      *  @return string              Returns the string representation of all the array elements in the same order,
      *                              escaped and with commas between each element.
+     *
      */
     function implode($pieces)
     {
@@ -1158,6 +1276,7 @@ class DHTMLSQL {
 	*
 	*
 	*  @return boolean                 Returns TRUE on success of FALSE on error.
+    *
 	*/
 	function truncate($table)
 	{
@@ -1245,6 +1364,7 @@ class DHTMLSQL {
 	*
 	*
 	*  @return boolean                 Returns TRUE on success of FALSE on error
+    *
 	*/
 	function update($table, $columns, $where = '', $replacements = '')
 	{
@@ -1289,6 +1409,7 @@ class DHTMLSQL {
 	*  Checks is a value is a valid result set obtained from a query against the database
 	*
 	*  @access private
+    *
 	*/
 	private function _is_result($value)
 	{
@@ -1335,6 +1456,7 @@ class DHTMLSQL {
      *
      *  @return string              Returns the quoted string with special characters escaped in order to prevent SQL
      *                              injections.     .
+     *
      */
 	public function escape($string)
 	{
@@ -1364,6 +1486,7 @@ class DHTMLSQL {
      *  @return mixed                   Returns an associative array containing all the rows from the resource created
      *                                  by the previous query or from the resource given as argument and moves the
      *                                  internal pointer to the end. Returns FALSE on error.
+     *
      */
 	public function fetch_assoc_all() {
 		$this->reset_result();
@@ -1671,6 +1794,7 @@ end;
      *
      *
      *  @return void
+     *
      */
 	function set_charset($charset = 'utf8', $collation = 'utf8_general_ci')
 	{
@@ -1679,7 +1803,12 @@ end;
 		return $this;
 	}
 	
-	//retrieves version information
+	/**
+	*  Retrieves the current version information of library
+	*
+	*
+	*  @return string
+	*/
 	public function version() {
 		return $this->version;
 	}

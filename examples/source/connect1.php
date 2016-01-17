@@ -1,5 +1,5 @@
 <?php 
-require "../../dhtmlsql.php";
+require "../../library/dhtmlsql.php";
 
 // Connection data (server_address, database, name, poassword)
 $dbhost = 'localhost';
