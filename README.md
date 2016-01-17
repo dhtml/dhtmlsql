@@ -1,5 +1,6 @@
 # DHTMLSQL 
 
+[![Total Downloads](https://poser.pugx.org/dhtml/dhtmlsql/downloads)](https://packagist.org/packages/dhtml/dhtmlsql)
 
 ## What am I looking at?
 
