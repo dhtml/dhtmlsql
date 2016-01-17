@@ -1961,7 +1961,6 @@ end;
      */
 	public function __call($name, $arguments)
 	{
-		if($name=='connect') {$result=call_user_func_array(array($this, 'connect'),$arguments);}
 		else if(method_exists($this->connection,$name)) {$result=call_user_func_array(array($this->connection, $name),$arguments);}
 		else if(method_exists($this->result,$name)) {$result=call_user_func_array(array($this->result, $name),$arguments);}
 		else {$result=null;}
