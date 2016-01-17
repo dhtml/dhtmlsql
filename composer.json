@@ -1,0 +1,29 @@
+{
+    "name": "dhtml/dhtmlsql",
+    "description": "DHTMLSQL  -  a modern and powerful PHP MySQLi Wrapper",
+    "keywords": ["dhtmlsql", "php", "mysql","mysqli","database"],
+    "type": "library",
+    "homepage": "https://github.com/dhtml/dhtmlsql",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anthony Ogundipe",
+            "homepage": "https://github.com/dhtml"
+        },
+        {
+            "name": "Contributors",
+            "homepage": "https://github.com/dhtml/dhtmlsql/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.1.0"
+    },
+    "autoload": {
+        "files": ["dhtmlsql.php"]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}
