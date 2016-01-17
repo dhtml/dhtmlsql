@@ -360,7 +360,7 @@ class DHTMLSQL {
      *  @return object				DHTMLSQL object is returned
      *
      */
-	public function _connect($host = null,$username = null,$password = null,$dbname = null,$port=null,$socket=null) {
+	private function _connect($host = null,$username = null,$password = null,$dbname = null,$port=null,$socket=null) {
 		$this->host=$host;
 		$this->username=$username;
 		$this->password=$password;
@@ -1961,7 +1961,7 @@ end;
      */
 	public function __call($name, $arguments)
 	{
-		else if(method_exists($this->connection,$name)) {$result=call_user_func_array(array($this->connection, $name),$arguments);}
+		if(method_exists($this->connection,$name)) {$result=call_user_func_array(array($this->connection, $name),$arguments);}
 		else if(method_exists($this->result,$name)) {$result=call_user_func_array(array($this->result, $name),$arguments);}
 		else {$result=null;}
 		if($name=='query') {$this->result=$result;}
