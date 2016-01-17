@@ -2,6 +2,7 @@
 /config.php
 /.idea
 /docs
+/factory
 /create.doc.bat
 /view.doc.bat
 /cli.bat
