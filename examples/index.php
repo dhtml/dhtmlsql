@@ -26,7 +26,14 @@ a:hover {text-decoration:underline;}
 <ul style="margin:0;padding:0;margin-left:20px;">
 <li>Create a database called dbtest on your local server.
 <li>Import dbtest.sql into that database.
-<li>Update database connection parameters in /default.config.php, /examples/source/connect1.php, /examples/source/connect2.php, /examples/source/connect3.php, and /examples/source/connect4.php
+<li>Update database connection parameters in the following:
+	<ul>	 
+	<li>default.config.php, 
+	<li>examples/source/connect1.php
+	<li>examples/source/connect2.php
+	<li>examples/source/connect3.php
+	<li>examples/source/connect4.php
+	</ul> 
 </ul>
 
 <h3>Launch Examples</h3>
