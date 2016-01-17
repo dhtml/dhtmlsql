@@ -4,6 +4,9 @@ This is a basic database connection script using DHTMLSQL
 */
 require "library/dhtmlsql.php";
 
+$dhtmlsql=new DHTMLSQL();
+$db=$dhtmlsql->connect('localhost','admin','pass','dbtest');
+
 // Connection data (server_address, database, name, poassword)
 $db=DHTMLSQL::connect('localhost','admin','pass','dbtest');
 

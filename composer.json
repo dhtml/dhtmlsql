@@ -1,8 +1,8 @@
 {
     "name": "dhtml/dhtmlsql",
-    "description": "DHTMLSQL  -  a modern and powerful PHP MySQLi Wrapper",
-    "keywords": ["dhtmlsql", "php", "mysql","mysqli","database"],
     "type": "library",
+    "description": "An ultra-modern, advanced, compact and lightweight MySQL database wrapper library, built around PHP's MySQLi extension.",
+    "keywords": ["mysqli", "mysql", "wrapper", "database", "db", "class", "library", "php"],
     "homepage": "https://github.com/dhtml/dhtmlsql",
     "license": "MIT",
     "authors": [
@@ -16,14 +16,12 @@
         }
     ],
     "require": {
-        "php": ">=5.1.0"
+        "php": ">=5.0.0"
     },
+    "version": "2.9.0",
     "autoload": {
-        "files": ["library/dhtmlsql.php"]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.0.x-dev"
-        }
+        "classmap": [
+            "library/dhtmlsql.php"
+        ]
     }
 }
