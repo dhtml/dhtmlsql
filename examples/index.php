@@ -33,6 +33,8 @@ a:hover {text-decoration:underline;}
 	<li>examples/source/connect2.php
 	<li>examples/source/connect3.php
 	<li>examples/source/connect4.php
+	<li>examples/source/connect5.php
+	<li>examples/source/connect6.php
 	</ul> 
 </ul>
 
@@ -42,6 +44,8 @@ a:hover {text-decoration:underline;}
 <li><a href="source/connect2.php" target="_blank">Securing connection example 2</a></li>
 <li><a href="source/connect3.php" target="_blank">Securing connection example 3</a></li>
 <li><a href="source/connect4.php" target="_blank">Re-using connection example 4</a></li>
+<li><a href="source/connect5.php" target="_blank">Re-using connection example 5</a></li>
+<li><a href="source/connect6.php" target="_blank">Yet another way of connecting</a></li>
 <li><a href="source/select.php" target="_blank">Select statement</a></li>
 <li><a href="source/insert.php" target="_blank">Insert statement</a></li>
 <li><a href="source/insert_bulk.php" target="_blank">Insert Bulk statement</a></li>

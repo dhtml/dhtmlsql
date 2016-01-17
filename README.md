@@ -51,7 +51,7 @@ Connect to a database
 require "dhtmlsql.php";
  
 // Connection data (server_address, name, password,  database)
-$db=DHTMLSQL::get()->connect('localhost','admin','pass','dbtest');
+$db=DHTMLSQL::connect('localhost','admin','pass','dbtest');
 ?>
 ```
 
@@ -118,6 +118,8 @@ $db->update(
 ### Author
 
 **Anthony Ogundipe** a.k.a dhtml
+
+Special thanks to <a href="https://www.facebook.com/OmniPotens">Marcellinus Okeke</a> and <a href="https://www.facebook.com/pyjac">Oyebanji Jacob Mayowa</a> for their contributions to this library.
 
 ### License
 

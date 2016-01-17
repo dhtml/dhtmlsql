@@ -1,6 +1,10 @@
 <?php 
 require "config.default.php";
 
-//$db->preview(true);
 echo $db->host_info;
+
+$db->query("show tables");
+echo $db->host_info;
+var_dump($db->fetch_assoc_all());
+
 ?>

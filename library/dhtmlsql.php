@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  An advanced, compact and lightweight MySQL database wrapper library, built around PHP's
  *  {@link http://www.php.net/manual/en/book.mysqli.php MySQLi extension}. It provides methods for interacting with MySQL
@@ -236,6 +237,11 @@ class DHTMLSQL {
     /**
      *  Allows you prefix your table names in curly braces in an sql statement
      *
+	 *
+     *  @param  string  $stmt		sql statements to be processed
+	 *
+     *  @param  string  $table_prefix		prefix to add for names of tables
+	 *
      *  <code>
      *	$db->db_prefix_tables("select * from {users} where 1",'ow_');
      *  </code>
@@ -243,14 +249,12 @@ class DHTMLSQL {
      *	select * from ow_users where 1
      *  </output>
 	 *
-     *  @param  string  $sql		sql statements to be processed
-     *  @param  string  $prefix		prefix to be added to table names
-	 *
-     *  @return string		sql statement with table names (in curly braces) prefixed
+     *  @return string		Returns sql statement with table names (in curly braces) prefixed
      *
 	*/
-	public function db_prefix_tables($sql,$prefix) {
-		return strtr($sql, array('{' => $prefix, '}' => ''));
+	public function db_prefix_tables($stmt,$table_prefix) 
+	{
+		return strtr($sql, array('{' => $table_prefix, '}' => ''));
 	}
 
 
@@ -278,10 +282,9 @@ class DHTMLSQL {
      *
      *  <code>
      *  // create the database object
-     *  $db = new DHTMLSQL();
-     *
-     *  $db->connect('host', 'username', 'password', 'database');
+     *  $db = DHTMLSQL::connect();
      *  </code>
+     *
      *
      *
      *  @param  mixed   $host       The address of the MySQL server to connect to (i.e. localhost).
@@ -290,11 +293,11 @@ class DHTMLSQL {
      *								
      *								If the host is an already existing mysqli connection, then it shall be re-used
      *
-     *  @param  string  $user       (Optional) The user name used for authentication when connecting to the MySQL server.
+     *  @param  string  $username   (Optional) The user name used for authentication when connecting to the MySQL server.
      *
      *  @param  string  $password   (Optional) The password used for authentication when connecting to the MySQL server.
      *
-     *  @param  string  $database   (Optional) The database to be selected after the connection is established.
+     *  @param  string  $dbname     (Optional) The database to be selected after the connection is established.
      *
      *  @param  string  $port       (Optional) The port number to attempt to connect to the MySQL server.
      *
@@ -312,7 +315,52 @@ class DHTMLSQL {
      *  @return object				DHTMLSQL object is returned
      *
      */
-	public function connect($host = null,$username = null,$password = null,$dbname = null,$port=null,$socket=null) {
+	public static function connect($host = null,$username = null,$password = null,$dbname = null,$port=null,$socket=null) {
+		return self::get()->_connect($host,$username,$password,$dbname,$port,$socket);
+	}
+
+    /**
+     *  Opens a connection to a MySQL Server and selects a database.
+     *
+     *
+     *
+     *  <code>
+     *  // create the database object
+     *  $db = new DHTMLSQL();
+     *
+     *  $db->connect('host', 'username', 'password', 'database');
+     *  </code>
+     *
+     *
+     *  @param  mixed   $host       The address of the MySQL server to connect to (i.e. localhost).
+     *
+     *                              Prepending host by <b>p:</b> opens a persistent connection.
+     *								
+     *								If the host is an already existing mysqli connection, then it shall be re-used
+     *
+     *  @param  string  $username   (Optional) The user name used for authentication when connecting to the MySQL server.
+     *
+     *  @param  string  $password   (Optional) The password used for authentication when connecting to the MySQL server.
+     *
+     *  @param  string  $dbname     (Optional) The database to be selected after the connection is established.
+     *
+     *  @param  string  $port       (Optional) The port number to attempt to connect to the MySQL server.
+     *
+     *                              Leave as empty string to use the default as returned by ini_get("mysqli.default_port").
+     *
+     *  @param  string  $socket     (Optional) The socket or named pipe that should be used.
+     *
+     *                              Leave as empty string to use the default as returned by ini_get("mysqli.default_socket").
+     *
+     *                              Specifying the socket parameter will not explicitly determine the type of connection
+     *                              to be used when connecting to the MySQL server. How the connection is made to the MySQL
+     *                              database is determined by the <i>host</i> argument.
+     *
+     *
+     *  @return object				DHTMLSQL object is returned
+     *
+     */
+	public function _connect($host = null,$username = null,$password = null,$dbname = null,$port=null,$socket=null) {
 		$this->host=$host;
 		$this->username=$username;
 		$this->password=$password;
