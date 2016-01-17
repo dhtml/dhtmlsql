@@ -1,6 +1,7 @@
 <?php
-
-/**
+ /**
+ *  DHTMLSQL
+ *  
  *  An advanced, compact and lightweight MySQL database wrapper library, built around PHP's
  *  {@link http://www.php.net/manual/en/book.mysqli.php MySQLi extension}. It provides methods for interacting with MySQL
  *  databases that are more secure, powerful and intuitive than PHP's default ones.
@@ -8,7 +9,9 @@
  *  It encourages developers to write maintainable code and provides a better default security layer by encouraging the
  *  use of prepared statements, where arguments are escaped automatically.
  *
- *  Visit {@link http://dhtml.github.io/dhtmlsql} for full documentation.
+ *  Visit {@link http://dhtml.github.io/dhtmlsql} for documentation.
+ *
+ *  Visit {@link http://dhtml.github.io/dhtmlsql/api} for complete API documentation.
  *
  *  For more resources visit {@link http://github.com/dhtml}
  *
@@ -23,6 +26,8 @@
 class DHTMLSQL {
 
     /**
+     *  connection
+     *  
      *  MySQL link identifier.
      *
      *  @access private
@@ -33,6 +38,8 @@ class DHTMLSQL {
 	private $connection=null;
 
     /**
+     *  result
+     *  
      *  MySQL result set.
      *
      *  @access private
@@ -43,6 +50,8 @@ class DHTMLSQL {
 	private $result;
 	
     /**
+     *  Instance
+     *  
      *  Static library class
      *
      *  @access private
@@ -53,6 +62,8 @@ class DHTMLSQL {
 	private static $Instance;
 	
     /**
+     *  version
+     *  
      *  Current library version
      *
      *  @access private
@@ -63,6 +74,8 @@ class DHTMLSQL {
 	private $version="1.0.0";
 	
     /**
+     *  returned_rows
+     *  
      *  Number of rows returned by query
      *
      *  Default is 0.
@@ -73,6 +86,8 @@ class DHTMLSQL {
 	public $returned_rows;
 	
     /**
+     *  connect_error
+     *  
      *  Logs the connection error if there is one
      *
      *
@@ -84,6 +99,8 @@ class DHTMLSQL {
 	private $connect_error="";
 
     /**
+     *  last_sql
+     *  
      *  Last sql statement issues internally
      *
      *  Default is an empty string.
@@ -96,6 +113,8 @@ class DHTMLSQL {
 	private $last_sql="";
 
     /**
+     *  last_result
+     *  
      *  Last database result resource
      *
      *  Default is null.
@@ -106,6 +125,8 @@ class DHTMLSQL {
 	public $last_result=null;
 	
     /**
+     *  halt_on_error
+     *  
      *  Determines if application should halt whenever there is a database error
      *
      *  Default is TRUE.
@@ -116,6 +137,8 @@ class DHTMLSQL {
 	public $halt_on_error=true;
 	
     /**
+     *  print_error
+     *  
      *  Prints error log to screen whenever an error occurs while executing a statement
      *
      *  Default is TRUE.
@@ -127,6 +150,8 @@ class DHTMLSQL {
 	
 	
     /**
+     *  session_logging
+     *  
      *  Configures library database query logging
      *  When set to true, each query executed is logged to dbase.log
      *
@@ -139,6 +164,8 @@ class DHTMLSQL {
 
 
     /**
+     *  session_logger
+     *  
      *  Configures the path where database queries will be logged if session_logging is set to true
      *  It can be a path that is writeable
      *  If this is not specified and session_logging=true then dbase.log will be used for logging by default
@@ -152,6 +179,8 @@ class DHTMLSQL {
 	
 
     /**
+     *  preview_mode
+     *  
      *  Configures the special preview mode
      *  When set to true, each query meant to be executed will be printed and on screen and not executed 
      *  This is useful in development mode for testing the library
@@ -167,6 +196,8 @@ class DHTMLSQL {
 
 
     /**
+     *  load
+     *  
     *  Static constructor of class
     *  You can instantiate the class object in a dynamic manner via $db=new DHTMLSQL();
     *  You can instantiate the class object in a static manner via $db=DHTMLSQL::load();
@@ -180,9 +211,11 @@ class DHTMLSQL {
 		return self::$Instance;
 	}
 
-    /**
+   /**
+    *  __construct
+    *  
 	* Class constructor
-     *
+    *
 	*/
 	public function __construct() {
 		self::$Instance=$this;
@@ -191,6 +224,8 @@ class DHTMLSQL {
 	
 	
     /**
+     *  session_log
+     *  
      *  Enables internal logging of SQL queries to file
      *
      *  <code>
@@ -217,6 +252,8 @@ class DHTMLSQL {
 	}
 	
     /**
+     *  reset_session_logger
+     *  
      *  Empties the session_log output file
      *
      *  <code>
@@ -235,6 +272,8 @@ class DHTMLSQL {
 	}
 
     /**
+     *  db_prefix_tables
+     *  
      *  Allows you prefix your table names in curly braces in an sql statement
      *
 	 *
@@ -259,6 +298,8 @@ class DHTMLSQL {
 
 
     /**
+     *  get
+     *  
      *  Statical way of instantiating the class
      *
      *  <code>
@@ -276,6 +317,8 @@ class DHTMLSQL {
 	public static function get() {return self::load();}
 
     /**
+     *  connect
+     *  
      *  Opens a connection to a MySQL Server and selects a database.
      *
      *
@@ -320,6 +363,8 @@ class DHTMLSQL {
 	}
 
     /**
+     *  _connect
+     *  
      *  Opens a connection to a MySQL Server and selects a database.
      *
      *
@@ -381,6 +426,8 @@ class DHTMLSQL {
 	}
 	
     /**
+     *  connect_error
+     *  
      *  Retrieves connection error after calling the connect method
      *
      *  <code>
@@ -394,6 +441,8 @@ class DHTMLSQL {
 	public function connect_error() {return $this->connect_error;}
 
     /**
+     *  connected
+     *  
      *  Confirms if a successful connection has been made to the database
      *  It is meant to be called after the connect method
      *
@@ -425,6 +474,8 @@ class DHTMLSQL {
 	
 	
     /**
+     *  preview
+     *  
      *  Turns on and off the preview mode.
      *  When preview mode is on, SQL statements are displayed on screen rather than executed
      *
@@ -443,6 +494,8 @@ class DHTMLSQL {
 	}
 
     /**
+     *  query
+     *  
      *  Runs a MySQL query.
      *
      *  After a SELECT query you can get the number of returned rows by reading the {@link returned_rows} property.
@@ -579,6 +632,8 @@ class DHTMLSQL {
 	}
 	
     /**
+     *  fetch_sql
+     *  
      *  Gets the last SQL statement executed
      *
      *  <code>
@@ -595,6 +650,8 @@ class DHTMLSQL {
 	}
 
     /**
+     *  affected_rows
+     *  
      *  Get number of affected rows in previous MySQL operation
 	 *
      *  @return int		number of affected rows otherwise -1 if last result fails
@@ -603,6 +660,8 @@ class DHTMLSQL {
 	public function affected_rows() {return isset($this->connection->affected_rows) ? $this->connection->affected_rows:-1;}
 
     /**
+     *  insert_id
+     *  
      *  Get the ID generated from the previous INSERT operation
 	 *
      *  @return int		returns generated ID otherwise 0 (if no ID was generated or autoincrement was not set)
@@ -612,6 +671,8 @@ class DHTMLSQL {
 
 
 	 /**
+     *  select
+     *  
      *  Shorthand for simple SELECT queries.
      *
      *  For complex queries (using UNION, JOIN, etc) use the {@link query()} method.
@@ -706,6 +767,8 @@ class DHTMLSQL {
 	}
 
     /**
+     *  dlookup
+     *  
      *  Returns one or more columns from ONE row of a table.
      *
      *  <code>
@@ -783,6 +846,8 @@ class DHTMLSQL {
 	
 	
 	/**
+    *  del
+    *  
 	*  Shorthand for deleting some or all items in a table.
 	*
 	*
@@ -827,6 +892,8 @@ class DHTMLSQL {
 
 
     /**
+     *  insert
+     *  
      *  Shorthand for INSERT queries.
      *
      *  When using this method column names will be enclosed in grave accents " ` " (thus, allowing seamless usage of
@@ -889,6 +956,8 @@ class DHTMLSQL {
 
 	
     /**
+     *  replace
+     *  
      *  Shorthand for REPLACE queries.
      *
      *  When using this method column names will be enclosed in grave accents " ` " (thus, allowing seamless usage of
@@ -941,6 +1010,8 @@ class DHTMLSQL {
 	}
 
     /**
+     *  _build_columns
+     *  
      *  Given an associative array or a string with comma separated values where the values represent column names, this
      *  method will enclose column names in grave accents " ` " (thus, allowing seamless usage of reserved words as column
      *  names) and automatically {@link escape()} value.
@@ -975,6 +1046,8 @@ class DHTMLSQL {
 	
     
     /**
+     *  _build_sql
+     *  
      *  Given an associative array where the array's keys represent column names and the array's values represent the
      *  values to be associated with each respective column, this method will enclose column names in grave accents " ` "
      *  (thus, allowing seamless usage of reserved words as column names) and automatically {@link escape()} value.
@@ -1027,6 +1100,8 @@ class DHTMLSQL {
 	}
 
     /**
+     *  insert_update
+     *  
      *  When using this method, if a row is inserted that would cause a duplicate value in a UNIQUE index or PRIMARY KEY,
      *  an UPDATE of the old row is performed.
      *
@@ -1124,6 +1199,8 @@ class DHTMLSQL {
 	}
 
 	/**
+    *  insert_bulk
+    *  
 	*  Shorthand for inserting multiple rows in a single query.
 	*
 	*  When using this method column names will be enclosed in grave accents " ` " (thus, allowing seamless usage of
@@ -1211,6 +1288,8 @@ class DHTMLSQL {
 
 	
 	/**
+    *  optimize
+    *  
 	*  Optimizes all tables that have overhead (unused, lost space)
 	*
 	*  <code>
@@ -1234,6 +1313,8 @@ class DHTMLSQL {
 	}
 
 	/**
+     *  implode
+     *  
      *  Works similarly to PHP's implode() function with the difference that the "glue" is always the comma, and that
      *  this method {@link escape()}'s arguments.
      *
@@ -1282,6 +1363,8 @@ class DHTMLSQL {
     }
 
 	/**
+    *  table_exists
+    *  
 	*  Checks whether a table exists in the current database.
 	*
 	*  <code>
@@ -1305,6 +1388,8 @@ class DHTMLSQL {
 	}
 
 	/**
+    *  truncate
+    *  
 	*  Shorthand for truncating tables.
 	*
 	*  <i>Truncating a table is quicker then deleting all rows, as stated in the MySQL documentation at
@@ -1344,6 +1429,8 @@ class DHTMLSQL {
 	}
 
 	/**
+    *  update
+    *  
 	*  Shorthand for UPDATE queries.
 	*
 	*  When using this method column names will be enclosed in grave accents " ` " (thus, allowing seamless usage of
@@ -1454,6 +1541,8 @@ class DHTMLSQL {
 
 	
 	/**
+    *  is_result
+    *  
 	*  Checks is a value is a valid result set obtained from a query against the database
 	*
 	*  @access private
@@ -1469,6 +1558,8 @@ class DHTMLSQL {
 
 	
     /**
+     *  escape
+     *  
      *  Escapes special characters in a string that's to be used in an SQL statement in order to prevent SQL injections.
      *
      *  <i>This method also encloses given string in single quotes!</i>
@@ -1519,6 +1610,8 @@ class DHTMLSQL {
 	}
 	
     /**
+     *  fetch_assoc_all
+     *  
      *  Returns an associative array containing all the rows from the resource created by the previous query or from the
      *  resource given as argument and moves the internal pointer to the end.
      *
@@ -1551,6 +1644,8 @@ class DHTMLSQL {
 	
 	
      /**
+     *  reset_result
+     *  
 	 *  Reset the internal pointer back to zero
 	 * 
      *  <code>
@@ -1578,6 +1673,8 @@ class DHTMLSQL {
 	}
 
     /**
+     *  export
+     *  
      *  Allows you to export entire database or specified tables to file or trigger download via browser
      *
      *  saves entire database to output.sql
@@ -1685,6 +1782,8 @@ echo $output;
 	
 	
     /**
+     *  fetch_table
+     *  
      *  Generates an export of a table
      *
      *  // saves entire database to output.sql
@@ -1745,6 +1844,8 @@ end;
 
 	
     /**
+     *  import
+     *  
      *  Allows you to parse an entire sql file 
      *
      *  // downloads a single table via browser
@@ -1817,6 +1918,8 @@ end;
 
 
     /**
+     *  set_charset
+     *  
      *  Sets MySQL character set and collation.
      *
      *  The ensure that data is both properly saved and retrieved from the database you should call this method first
@@ -1852,6 +1955,8 @@ end;
 	}
 	
 	/**
+    *  version
+    *  
 	*  Retrieves the current version information of library
 	*
 	*
@@ -1862,6 +1967,8 @@ end;
 	}
 
 	/**
+    *  __destruct
+    *  
 	*  Frees the memory associated with the last result.
 	*
 	*
@@ -1880,6 +1987,8 @@ end;
 
 	
     /**
+     *  __log
+     *  
      *  Enables processing of database errors
      *
      *  The following code is used internally when database connection does not exist
@@ -1915,6 +2024,8 @@ end;
 	}
 
     /**
+     *  __halt
+     *  
      *  This is a routine meant to handle MySQLi query errors 
      *  If you try to select data from a table that does not exist
      *  An error message explaining the problem will be passed to _log and finally to halt
@@ -1936,6 +2047,8 @@ end;
 	}	
 
     /**
+     *  ___call
+     *  
      *  Whenever you call a method that does not exist in this library 
      *  This routine is executed.
      *  
@@ -1970,8 +2083,11 @@ end;
 	}
 	
     /**
+     *  __get
+     *  
      *  Whenever you attempt to retrieve a property that does not exist in this library 
      *  This routine is executed.
+     *  
      *  
      *  If the property belongs to the result object, it shall be retrieved
      *  otherwise, if it belongs to the connection object, it shall be subsequently retrieved

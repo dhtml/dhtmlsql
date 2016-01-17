@@ -7,7 +7,7 @@
 You are a looking at An advanced, compact and lightweight MySQL database wrapper library, built around PHP's mysqli extension.
 It provides methods for interacting with MySQL databases that are more powerful and intuitive than PHP’s default ones.
 
-Features
+## Features
  * It uses the mysqli extension for communicating with the database instead of the old mysql extension, which is officially deprecated as of PHP v5.5.0 and will be removed in the future; again, this is not a wrapper for the PDO extension which is already a wrapper in itself
  * It offers lots of powerful methods for easier interaction with MySQL
  * It provides a better security layer by encouraging the use of prepared statements, where parameters are automatically escaped.
@@ -112,8 +112,10 @@ $db->update(
 
 ?>
 ```
+### Support
+[Visit the project page](http://dhtml.github.com/dhtmlsql/) for documentation, configuration, and more advanced usage examples. 
 
-[Visit the project page](http://dhtml.github.com/dhtmlsql/) for documentation, configuration, and more advanced usage examples.
+You can also read the complete [API documentation here](http://dhtml.github.com/dhtmlsql/api) or even discuss it [here](https://disqus.com/home/forums/dhtmlsql/).
 
 ### Author
 
