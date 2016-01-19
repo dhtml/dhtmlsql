@@ -4,7 +4,7 @@
 
 ## What am I looking at?
 
-You are a looking at An advanced, compact and lightweight MySQL database wrapper library, built around PHP's mysqli extension.
+You are looking at An advanced, compact and lightweight MySQL database wrapper library, built around PHP's mysqli extension.
 It provides methods for interacting with MySQL databases that are more powerful and intuitive than PHP’s default ones.
 
 ## Features
