@@ -1,6 +1,8 @@
 # DHTMLSQL 
 
 [![Total Downloads](https://poser.pugx.org/dhtml/dhtmlsql/downloads)](https://packagist.org/packages/dhtml/dhtmlsql)
+[![Latest Stable Version](https://poser.pugx.org/dhtml/dhtmlsql/version.png)](https://packagist.org/packages/dhtml/dhtmlsql)
+[![License](https://poser.pugx.org/dhtml/dhtmlsql/license)](https://packagist.org/packages/dhtml/dhtmlsql)
 
 ## What am I looking at?
 
