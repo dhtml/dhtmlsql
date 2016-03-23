@@ -2112,8 +2112,179 @@ end;
 	public function __get($name) {
 		if(isset($this->result->$name)) {return $this->result->$name;}
 		else if(isset($this->connection->$name)) {return $this->connection->$name;}
+		else if(isset($this->pdata["$name"])) {return $this->pdata["$name"];}
 		else return null;
 	}
 
+	
+	
+	 /**
+     *  pquery
+     *  
+     *  This function will execute an sql query in pagination mode
+     *  
+     *  @param  string    $sql   				a normal sql query without limits e.g. select first,last from Employees
+     *  
+     *  @param  string    $items_per_page   	the number of results to list per page
+     *  
+     *  @param  string    $pager_variable_item  the pagination variable to use in the browser
+     *  
+     *  If the property belongs to the result object, it shall be retrieved
+     *  otherwise, if it belongs to the connection object, it shall be subsequently retrieved
+     *  otherwise null shall be returned
+     *  
+     *	An example is shown below:
+     *  <code>
+     *  $db->pquery('select * from country',5,'page');
+     *  
+     *  while($row=$db->fetch_assoc()) {
+     *  	var_dump($row);	
+     *  }
+     *  
+     *  if($db->pager->num_rows>0) {
+     *  	echo $db->pager->show_navigation();
+     *  }
+     *  </code>
+     * 
+     * 
+     *
+     *  @return boolean 				True for success, false for failure 
+     */
+	public function pquery($sql,$items_per_page=10,$pager_variable='page') {
+		if(!is_numeric($items_per_page)) {return $this->pquery_all($sql);}
+		$result= $this->query($sql);
+		$total_rows = $result->num_rows;
+
+		if($total_rows==0) {return $this->pquery_all($sql);}
+
+		//total number of result pages possible
+		$total_result_pages=ceil($total_rows/$items_per_page);
+
+		//get current page integer - must not be lesser than 1, and not greater than maximum number of pages
+		$current_page=isset($_GET["$pager_variable"]) ? intval($_GET["$pager_variable"]) : 1;
+		if($current_page==0) {$current_page=1;}
+		else if($current_page>$total_result_pages) {$current_page=$total_result_pages;}
+
+		$limit_offset=($current_page-1)*$items_per_page;
+
+		$sql_final="$sql limit $limit_offset,$items_per_page";
+
+		$result=$this->query($sql_final);
+		$num_rows=$result->num_rows;
+		
+		$this->pdata=array(
+		'sql_initial'=>$sql,
+		'sql_final'=>$sql_final,
+		'items_per_page'=>$items_per_page,
+		'pager_variable'=>$pager_variable,
+		'item_name'=> $num_rows>1 ? 'entries' : 'entry',
+		'total_rows'=>$total_rows,
+		'total_result_pages'=>$total_result_pages,
+		'current_page'=>$current_page,
+		'limit_offset'=>$limit_offset,
+		'limit_count'=>$items_per_page,
+		'num_rows'=>$num_rows,
+		);
+
+		return $result;
+	}
+
+    /**
+     *  pquery_all
+     *  
+     *  This function will execute an sql query in pagination mode and render all possible results
+     *  
+     *  @param  string    $sql   				a normal sql query without limits e.g. select first,last from Employees
+     *  
+     *  
+     *  If the property belongs to the result object, it shall be retrieved
+     *  otherwise, if it belongs to the connection object, it shall be subsequently retrieved
+     *  otherwise null shall be returned
+     *  
+     *	An example is shown below:
+     *  <code>
+     *  $db->pquery_all('select * from country');
+     *  
+     *  while($row=$db->fetch_assoc()) {
+     *  	var_dump($row);	
+     *  }
+     *  
+     *  </code>
+     * 
+     * 
+     *
+     *  @return boolean 				True for success, false for failure 
+     */
+	public function pquery_all($sql) {
+		$result= $this->query($sql);
+		$total_rows = $result->num_rows;
+
+		//total number of result pages possible
+		$items_per_page=$total_rows;
+		$total_result_pages=1;
+		$current_page=1;
+
+		$limit_offset=0;
+
+		
+		$this->pdata=array(
+		'sql_initial'=>$sql,
+		'sql_final'=>$sql,
+		'items_per_page'=>$items_per_page,
+		'pager_variable'=>isset($pager_variable) ? $pager_variable : null,
+		'item_name'=> $total_rows>1 ? 'entries' : 'entry',
+		'total_rows'=>$total_rows,
+		'total_result_pages'=>$total_result_pages,
+		'current_page'=>$current_page,
+		'limit_offset'=>$limit_offset,
+		'limit_count'=>$items_per_page,
+		'num_rows'=>$total_rows,
+		);
+
+		return $result;	
+	}
+
+    /**
+     *  show_navigation
+     *  
+     *  This function will return the html code for the navigation interface
+     *  
+     * 
+     *
+     *  @return string 				html code for pagination area 
+     */
+	public function show_navigation() {
+		$output='';
+		$url=$_SERVER['PHP_SELF'];
+			
+		if($this->current_page>1) {
+			$query=$_SERVER['QUERY_STRING'];
+			parse_str($query, $par);
+			$par[$this->pager_variable]=$this->current_page-1;
+			$par=http_build_query($par);
+		
+			$plink="$url?$par";
+			$output.='<a href="'.$plink.'">&laquo; Previous</a>&nbsp;&nbsp;';	
+		}	
+
+		if($this->total_result_pages==1) {
+			$output.='Showing '.$this->total_rows.' '.$this->item_name;
+		} else {
+			$output.='Showing '.($this->limit_offset+1).' to '. ($this->limit_offset+$this->num_rows) .' of '.$this->total_rows.' '.$this->item_name;
+		}
+
+		if($this->current_page<$this->total_result_pages) {
+			$query=$_SERVER['QUERY_STRING'];
+			parse_str($query, $par);
+			$par[$this->pager_variable]=$this->current_page+1;
+			$par=http_build_query($par);
+
+			$nlink="$url?$par";
+			$output.='&nbsp;&nbsp;<a href="'.$nlink.'">Next &raquo;</a>';	
+		}	
+
+		return $output;
+	}
 }
+
 ?>

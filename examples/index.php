@@ -58,6 +58,8 @@ a:hover {text-decoration:underline;}
 <li><a href="source/createtable.php" target="_blank">Create a table</a></li>
 <li><a href="source/import.php" target="_blank">Import Database from SQL</a></li>
 <li><a href="source/export.php" target="_blank">Export Database to SQL</a></li>
+<li><a href="source/pager1.php" target="_blank">Database Pagination 1</a></li>
+<li><a href="source/pager2.php" target="_blank">Database Pagination 2</a></li>
 
 </ol>
 
